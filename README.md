@@ -7,9 +7,9 @@ Designed for simplicity and easy integration into any C++ project
 
 - C++20
 
-## Integration
+## Usage
 
-1. Copy the entire `src` directory into your project’s source tree.
+1. Copy the entire `src` directory into your project's source tree.
 2. Include the main header:
    ```cpp
    #include "config.h"
@@ -18,12 +18,10 @@ Designed for simplicity and easy integration into any C++ project
 
 ## Usage Example
 
-Assume you have a configuration file `../examples/config.ini`:
-
 ```ini
 # Global settings
-TASK_NAME = "Seidel method"
-TASK_DESCRIPTION = "Solve SLAE"
+TASK_NAME = Elliptic PDE solver
+TASK_DESCRIPTION = Uses power method to find eigenvalues and Seidel method to solve the system
 A = 0.0
 B = 1.0
 H = 0.01
@@ -48,7 +46,7 @@ You can read it and access the values as follows:
 int main() {
     try {
         get_config::Config config;
-        config.load_config("../examples/config.ini");
+        config.load_config("path_to_file/config.ini");
 
         // Access global parameters (default block is empty)
         double a = config.get<double>("A");
@@ -83,28 +81,28 @@ int main() {
 ## Configuration File Syntax
 
 - **Comments** start with `#` and extend to the end of the line.
-- **Blocks (sections)** are defined as `[block_name]` on a separate line.
+- **Blocks** are defined as `[block_name]` on a separate line.
 - **Parameters** are written as `key = value` (one per line).  
   The value extends to the end of the line and is trimmed.
-- Parameter names can contain letters, digits, and underscores; they must start with a letter or underscore.
 
 ## Overview
 
 ### Class `get_config::Config`
 
 #### Loading
-- `load_config(std::istream&)` – parse from an input stream.
-- `load_config(const std::string& filepath)` – parse from a file.
+- `load_config(std::istream&)`
+- `load_config(const std::string& filepath)` - parse from a file.
 
 #### Accessors without type conversion (returns `const std::string&`)
-- `get(const std::string& parameter)` – from default block.
-- `get(const std::string& block, const std::string& parameter)` – from specific block.
+- `get(const std::string& parameter)` - from default block.
+- `get(const std::string& block, const std::string& parameter)` - from specific block.
 - `operator[](const std::string& parameter)`
+- `operator[](const std::string& block, const std::string& parameter)` - from C++23.
 - `operator()(const std::string& parameter)`
 - `operator()(const std::string& block, const std::string& parameter)`.
 
-#### Accessors with type conversion (template versions)
-- `get<T>(const std::string& parameter)` – converts value to type `T`.
+#### Accessors with type conversion (returns `T`)
+- `get<T>(const std::string& parameter)`
 - `get<T>(const std::string& block, const std::string& parameter)`
 
 Supported types: `char`, `bool`, `int`, `long`, `long long`, `unsigned long`, `unsigned long long`, `float`, `double`, `long double`.
